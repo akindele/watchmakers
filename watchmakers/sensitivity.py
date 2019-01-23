@@ -159,6 +159,33 @@ def sensitivityMapPass2New():
 
                     print ''
 
+def EfficiencyMapInPMTVol():
+    '''For the given configuration on initializing watchmakers,
+    Generates PMT Volume Efficiency histograms for all merged
+    files.'''
+    n9 = int(arguments['--minN9'])
+    good_pos = float(arguments['-g'])
+    good_dir = float(arguments['-G'])
+    print "Evaluating sensitivity in PMT Volume for all WaterVolume types. Using given minimum parameter requirements"
+    additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
+    if additionalString == "":
+        additionalString = "_default"
+    d,proc,coverage = loadSimulationParametersNew()
+    for _p in proc:
+        for _loc in proc[_p]:
+            if _loc != "WaterVolume":
+                continue
+            for idx,_cover in enumerate(coverage):
+                for _element in d[_p]:
+                    _tag = "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
+                    _file = "bonsai_root_files%s/%s/merged_%s_%s_%s.root"%(additionalMacStr,_cover,_loc,_element,_p)
+                    print _tag
+                    obtainEfficiencyInPMTVol(_cover,_file,_tag, _n9=n9, _posGood=good_pos, _dirGood=good_dir)
+                    print ''
+
+
+
+
 def readEfficiencyHistogram():
 
     hist = {}

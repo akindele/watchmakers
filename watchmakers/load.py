@@ -82,6 +82,7 @@ docstring = """
 
     -M                  Merge result files from trial ntuples. Step one.
     --histograms        Apply n9-position cuts and create efficiency histograms. Step two.
+    --PMTAccHists       Apply n9/good_pos/good_dir cuts and Look at Acceptance for WaterVolume events in PMT volume. Optional.
     --evalRate          Evaluate the rates and combine to efficiency histrograms Step three.
 
     --U238_PPM=<_Uppm>  Concentration of U-238 in glass [Default: %f]
