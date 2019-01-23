@@ -210,7 +210,7 @@ def loadSimulationParametersNew():
     d['CHAIN_235U_NA'] = ['231Th','223Fr','211Pb','211Bi','207Tl']
     d['40K_NA']         = ['40K']
     d['CHAIN_222Rn_NA'] = ['214Pb','214Bi','210Bi','210Tl']
-    d['TANK_ACTIVITY'] = ['60Co','137Cs']
+    d['STEEL_ACTIVITY'] = ['60Co','137Cs']
 
     d['ibd_p'] = ['promptPositron']
     d['ibd_n'] = ['delayedNeutron']
@@ -224,13 +224,13 @@ def loadSimulationParametersNew():
         ZA[i] = str(int(A[i])*1000 +int(Z[i]))
     d['A_Z'] =  ZA
 
-    process = {'40K_NA':['WaterVolume','PMT','VETO','CONCRETE','TANK','ROCK'],\
-    'CHAIN_238U_NA':['PMT','VETO','CONCRETE','TANK','ROCK','GD'],\
-    'CHAIN_232Th_NA':['PMT','VETO','CONCRETE','TANK','ROCK','GD'],\
+    process = {'40K_NA':['WaterVolume','PMT','VETO','CONCRETE','TANK','ROCK','SHIELD'],\
+    'CHAIN_238U_NA':['PMT','VETO','CONCRETE','TANK','ROCK','GD','SHIELD'],\
+    'CHAIN_232Th_NA':['PMT','VETO','CONCRETE','TANK','ROCK','GD','SHIELD'],\
     'CHAIN_235U_NA':['TANK','GD'],\
     'CHAIN_222Rn_NA':['WaterVolume'],\
-    'TANK_ACTIVITY':['TANK'],\
-    'FN':['ROCK'],\
+    'STEEL_ACTIVITY':['TANK','CABLE'],\
+    'FN':['ROCK','CONCRETE'],\
     'A_Z':['WaterVolume'],\
     'ibd_p':['WaterVolume'],\
     'ibd_n':['WaterVolume'],\

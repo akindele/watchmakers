@@ -101,7 +101,7 @@ def macroGeneratorNew(percentage,location,element,_dict,runs,events,dirOpt):
 /generator/rate/set %f
 /run/beamOn %d'''%(depth,rate,events)
 
-    elif element in d['CHAIN_238U_NA'] or element in d['CHAIN_232Th_NA'] or element in d['40K_NA'] or element in d['TANK_ACTIVITY'] or element in d['CHAIN_235U_NA']:
+    elif element in d['CHAIN_238U_NA'] or element in d['CHAIN_232Th_NA'] or element in d['40K_NA'] or element in d['STEEL_ACTIVITY'] or element in d['CHAIN_235U_NA']:
         if location == 'PMT':
             line1 = '''
 /generator/add decaychain %s:regexfill:poisson
@@ -224,7 +224,7 @@ def jobString(percentage,j,runs,models,arguments):
 
         line1 = """#!/bin/sh
 #MSUB -N WM_%s_%s_%d_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s/log_case%s%s/wmpc_%s_%s_%d.log
@@ -250,7 +250,7 @@ export SHEFFIELD=1\n
     elif arguments["--docker"]:
         line1 = """#!/bin/sh
 #MSUB -N WM_%s_%s_%d_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s/log_case%s%s/wmpc_%s_%s_%d.log
@@ -275,7 +275,7 @@ export G4NEUTRONHP_USE_ONLY_PHOTONEVAPORATION=1\n
     elif  arguments["--singularity"]:
         line1 = """#!/bin/sh
 #MSUB -N WM_%s_%s_%d_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s/log_case%s%s/wmpc_%s_%s_%d.log
@@ -300,7 +300,7 @@ export G4NEUTRONHP_USE_ONLY_PHOTONEVAPORATION=1\n
     else:
         line1 = """#!/bin/sh
 #MSUB -N WM_%s_%s_%d_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s/log_case%s%s/wmpc_%s_%s_%d.log
@@ -543,7 +543,7 @@ def generateJobsNew(N,arguments):
                             if arguments["--docker"]:
 				outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s
@@ -558,7 +558,7 @@ source $HOME/software/docker_watchman/env.sh
 			    elif arguments["--singularity"]:
 				outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s
@@ -573,7 +573,7 @@ source $HOME/software/docker_watchman/env.sh
                             else:
 				outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
-#MSUB -A ared         # sets bank account
+#MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
 #MSUB -q pbatch         #pool
 #MSUB -o %s
@@ -605,7 +605,7 @@ source %s/env_wm.sh\n\n"""%(job_line,log+'.out',log+'.err',directory,\
     (bonsai %s %s || bonsai %s %s ||bonsai %s %s ||bonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
                                 	outfile.writelines(lines)
                             if i*10+10  < N:
-				outfile.writelines("./%s"%(dir+'/job%08d.sh'%((i+1)*10)))
+				outfile.writelines("(msub %s || ./%s)"%(dir+'/job%08d.sh'%((i+1)*10),dir+'/job%08d.sh'%((i+1)*10)))
                             outfile.close()
 
 
