@@ -2,9 +2,9 @@
 
 from watchmakers.load import *
 from watchmakers.analysis import *
-from io_operations import testEnabledCondition
+from .io_operations import testEnabledCondition
 if arguments['--noRoot']:
-    print 'Not loading the neutrinoOscillation module'
+    print('Not loading the neutrinoOscillation module')
 else:
     import watchmakers.NeutrinoOscillation as nuOsc
 
@@ -36,14 +36,14 @@ def sensitivityMapPass2New():
     # Need to fix this for future running
 
     OnOffRatio = float(arguments["--OnOff"])
-    print site,'with on-off ratio of ',OnOffRatio
+    print(site,'with on-off ratio of ',OnOffRatio)
 
     cores = int(arguments["--cores"])
 
     if arguments["--RNRedux"]:
         rnRedux = float(arguments["--RNRedux"])
         if rnRedux>1:
-            print "Value of reduction of radionuclide greater than 1, setting to 0"
+            print("Value of reduction of radionuclide greater than 1, setting to 0")
             rnRedux = 0.0
     else:
         rnRedux = 0.0
@@ -58,30 +58,30 @@ def sensitivityMapPass2New():
         timeAdjustment = 1./365.
     maxTime = 14400.*timeAdjustment
 
-    print '\nEvaluation based on geoneutrinos.org'
+    print('\nEvaluation based on geoneutrinos.org')
     #parameters  = loadAnalysisParametersNew(t)
     rates       = {}#parameters[11]
     rates["boulby_S"]=1.0
     rates["imb_S"]=1.0
-    print 'Wrong rates for now'
+    print('Wrong rates for now')
     sizeDetc    = 2.*pi*pow(fidRadius/1000.,2)*fidHeight/1000./1000.
     sizeTank    = 2.*pi*pow(detectorRadius/1000.,2)*detectorHeight/1000./1000.
     FVkTonRatio = (pow(fidRadius,2)*fidHeight)/(pow(detectorRadius,2)*detectorHeight)
     boulbyRate,imbRate = rates["boulby_S"]*FVkTonRatio,rates["imb_S"]*FVkTonRatio
-    print ' boulby rates: %4.2e per %s per %4.2f kton; [r: %4.2f m; z: %4.2f m]'\
-    %(boulbyRate,t,sizeDetc,fidRadius/1000.,fidHeight/1000.)
+    print(' boulby rates: %4.2e per %s per %4.2f kton; [r: %4.2f m; z: %4.2f m]'\
+    %(boulbyRate,t,sizeDetc,fidRadius/1000.,fidHeight/1000.))
     #fast neutrons
     # print 'Debug',rates["boulby_S"],FVkTonRatio
-    print '\nEvaluation not based on geoneutrinos.org'
+    print('\nEvaluation not based on geoneutrinos.org')
     detectorMedium,detectorMass,reactorPower,reactorStandoff = 1,sizeDetc*1000.,1.5,24.98
     experiment = nuOsc.NeutrinoOscillation(detectorMedium,detectorMass,reactorPower,reactorStandoff)
     preOsc,afterOsc = experiment.FindRate()
-    print ' Neutrino rate pre osc: %4.2f; neutrino rate post osc: %4.2f at %4.2f GWth, at %4.2f km, for %4.2f kton' %(preOsc,afterOsc,reactorPower,reactorStandoff,detectorMass/1000.)
+    print(' Neutrino rate pre osc: %4.2f; neutrino rate post osc: %4.2f at %4.2f GWth, at %4.2f km, for %4.2f kton' %(preOsc,afterOsc,reactorPower,reactorStandoff,detectorMass/1000.))
     detectorMedium,detectorMass,reactorPower,reactorStandoff = 1,sizeDetc*1000.,1.575,24.98
     experiment = nuOsc.NeutrinoOscillation(detectorMedium,detectorMass,reactorPower,reactorStandoff)
     preOsc,afterOsc = experiment.FindRate()
-    print ' Neutrino rate pre osc: %4.2f; neutrino rate post osc: %4.2f at %4.2f GWth, at %4.2f km, for %4.2f kton' %(preOsc,afterOsc,reactorPower,reactorStandoff,detectorMass/1000.)
-    print ''
+    print(' Neutrino rate pre osc: %4.2f; neutrino rate post osc: %4.2f at %4.2f GWth, at %4.2f km, for %4.2f kton' %(preOsc,afterOsc,reactorPower,reactorStandoff,detectorMass/1000.))
+    print('')
 
     proc,loca,type,color,lineS,acc,scale   = [],[],[],[],[],[],[]
 
@@ -154,10 +154,10 @@ def sensitivityMapPass2New():
                 for _element in d[_p]:
                     _tag = "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
                     _file = "bonsai_root_files%s/%s/merged_%s_%s_%s.root"%(additionalMacStr,_cover,_loc,_element,_p)
-                    print _tag
+                    print(_tag)
                     obtainEventEfficiency(_cover,_file,_tag)
 
-                    print ''
+                    print('')
 
 def EfficiencyMapInPMTVol():
     '''For the given configuration on initializing watchmakers,
@@ -166,7 +166,7 @@ def EfficiencyMapInPMTVol():
     n9 = int(arguments['--minN9'])
     good_pos = float(arguments['-g'])
     good_dir = float(arguments['-G'])
-    print "Evaluating sensitivity in PMT Volume for all WaterVolume types. Using given minimum parameter requirements"
+    print("Evaluating sensitivity in PMT Volume for all WaterVolume types. Using given minimum parameter requirements")
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
     if additionalString == "":
         additionalString = "_default"
@@ -179,9 +179,9 @@ def EfficiencyMapInPMTVol():
                 for _element in d[_p]:
                     _tag = "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
                     _file = "bonsai_root_files%s/%s/merged_%s_%s_%s.root"%(additionalMacStr,_cover,_loc,_element,_p)
-                    print _tag
+                    print(_tag)
                     obtainEfficiencyInPMTVol(_cover,_file,_tag, _n9=n9, _posGood=good_pos, _dirGood=good_dir)
-                    print ''
+                    print('')
 
 
 
@@ -193,7 +193,7 @@ def readEfficiencyHistogram():
     d,proc,coverage = loadSimulationParametersNew()
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
 
-    print 'Loading in all .C file...'
+    print('Loading in all .C file...')
     for _p in proc:
         for _loc in proc[_p]:
             for idx,_cover in enumerate(coverage):
@@ -206,32 +206,32 @@ def readEfficiencyHistogram():
                     hist[_tag] =  TH2D()
                     gROOT.GetObject(_hist,hist[_tag])
 
-    print 'done processing all .C files. What is in the directory:'
+    print('done processing all .C files. What is in the directory:')
     gROOT.ProcessLine('.ls')
 
-    print '\nLoading PMT activity:'
+    print('\nLoading PMT activity:')
     mPMTs,mPMTsU238,mPMTsTh232,mPMTsK40 = loadPMTActivity()
-    print 'done.'
+    print('done.')
 
-    print '\nLoading Veto activity:'
+    print('\nLoading Veto activity:')
     mVETOs,mVETOsU238,mVETOsTh232,mVETOsK40 = loadVETOActivity()
-    print 'done.'
-   
-    print '\nLoading Gd activity:'
+    print('done.')
+
+    print('\nLoading Gd activity:')
     GdU238,GdTh232,GdU235,GdU238_l,GdTh232_l,GdU235_l = loadGdActivity()
-    print 'done.'
- 
+    print('done.')
+
     tankRadius  = float(arguments["--tankRadius"])-float(arguments['--steelThick'])
     tankHeight  = float(arguments["--halfHeight"])-float(arguments['--steelThick'])
     nKiloTons = pi*pow(tankRadius/1000.,2)*(2.*tankHeight/1000.)
     rRn222 = float(arguments["--Rn222"])*nKiloTons
-    print '\nLoaded Rn-222 activity of ',rRn222,'Bq per water volume, assumed a rate of %4.3e Bq/m^3'%(float(arguments["--Rn222"]))
+    print('\nLoaded Rn-222 activity of ',rRn222,'Bq per water volume, assumed a rate of %4.3e Bq/m^3'%(float(arguments["--Rn222"])))
 
 
     FreeProtons = 0.668559
     TNU         = FreeProtons* nKiloTons /1000./365./24./3600.
     boulbyIBDRate   = 800.*TNU
-    print '\nLoaded an IBD rate of ',boulbyIBDRate,' events per water volume per second, assumed a rate of %4.3e TNU'%(boulbyIBDRate/TNU)
+    print('\nLoaded an IBD rate of ',boulbyIBDRate,' events per water volume per second, assumed a rate of %4.3e TNU'%(boulbyIBDRate/TNU))
 
     innerRad = 12.5 #meters
     outerRad = 13.5 #meters
@@ -254,10 +254,10 @@ def readEfficiencyHistogram():
     skMuFlux        = 1.58e-7 #mu/cm2/sec
     radionuclideRate= (skRNRate*avgRNYieldRC/avgMuonSK)*muonRate*nKiloTons*1e9
     RN_boulby        = radionuclideRate[1]
-    print '\nLoaded mass of rock %e g. Fast Neutron Yield %e per sec; radionuclide yield %e per sec'%(rockMass,FN_boulby,RN_boulby)
+    print('\nLoaded mass of rock %e g. Fast Neutron Yield %e per sec; radionuclide yield %e per sec'%(rockMass,FN_boulby,RN_boulby))
 
 
-    print '\n What are the maximum efficiency/rate found in each histogram:'
+    print('\n What are the maximum efficiency/rate found in each histogram:')
     _sing = 0.0
     lineU238PMT,lineTh232PMT,lineKPMT = '','',''
     lineU238VETO,lineTh232VETO,lineKVETO = '','',''
@@ -375,7 +375,7 @@ def readEfficiencyHistogram():
             _sing+=hist[_t].GetMaximum()*mPMTsK40[0]
             lineKCONC += "%50s %e %15.10f\n"%(_t,hist[_t].GetMaximum(),hist[_t].GetMaximum()*mPMTsK40[0])
 
-	elif 'GD' in _t and 'CHAIN_238U_NA' in _t:
+        elif 'GD' in _t and 'CHAIN_238U_NA' in _t:
             if '210Tl' in _t:
                 _sing+=hist[_t].GetMaximum()*GdU238_l*0.002
                 h.Add(hist[_t],GdU238_l*0.002)
@@ -406,7 +406,7 @@ def readEfficiencyHistogram():
                 _sing+=hist[_t].GetMaximum()*GdU235_l
                 h.Add(hist[_t],GdU235_l)
                 lineU235GD += "%50s %e %15.10f\n"%(_t,hist[_t].GetMaximum(),hist[_t].GetMaximum()*GdU235_l)
- 
+
 
         elif 'WaterVolume' in _t and 'CHAIN_222Rn_NA' in _t:
             if '210Tl' in _t:
@@ -439,28 +439,28 @@ def readEfficiencyHistogram():
 
                     # hist =
                     # print _hist.GetMaximum()
-    print ''
-    print 'PMT U-238 \n', lineU238PMT
-    print 'PMT Th-232\n', lineTh232PMT
-    print 'PMT K\n', lineKPMT,'\n'
-    print 'VETO U-238 \n', lineU238VETO
-    print 'VETO Th-232 \n', lineTh232VETO
-    print 'VETO K \n', lineKVETO,'\n'
-    print 'Water Rn-222\n',lineRn222WaterVolume,'\n'
-    print 'Gunite U-238 \n', lineU238GUN
-    print 'Gunite Th-232\n', lineTh232GUN
-    print 'Gunite K\n', lineKGUN,'\n'
-    print 'Concrete U-238 \n', lineU238CONC
-    print 'Concrete Th-232\n', lineTh232CONC
-    print 'Concrete K\n', lineKCONC,'\n'
-    print 'ROCK U-238 \n', lineU238ROCK
-    print 'ROCK Th-232\n', lineTh232ROCK
-    print 'ROCK K\n', lineKROCK,'\n'
-    print 'ROCK Fast Neutron\n',lineFNROCK,'\n'
-    print 'Else  \n', lineELSE,'\n'
-    print 'Total singles rate:\t\t\t',_sing,'events per sec at minimum buffer distance of 0.5 m\n'
-    print 'Signal information'
-    print 'Prompt positron Water volume \n', linePromptWaterVolume
+    print('')
+    print('PMT U-238 \n', lineU238PMT)
+    print('PMT Th-232\n', lineTh232PMT)
+    print('PMT K\n', lineKPMT,'\n')
+    print('VETO U-238 \n', lineU238VETO)
+    print('VETO Th-232 \n', lineTh232VETO)
+    print('VETO K \n', lineKVETO,'\n')
+    print('Water Rn-222\n',lineRn222WaterVolume,'\n')
+    print('Gunite U-238 \n', lineU238GUN)
+    print('Gunite Th-232\n', lineTh232GUN)
+    print('Gunite K\n', lineKGUN,'\n')
+    print('Concrete U-238 \n', lineU238CONC)
+    print('Concrete Th-232\n', lineTh232CONC)
+    print('Concrete K\n', lineKCONC,'\n')
+    print('ROCK U-238 \n', lineU238ROCK)
+    print('ROCK Th-232\n', lineTh232ROCK)
+    print('ROCK K\n', lineKROCK,'\n')
+    print('ROCK Fast Neutron\n',lineFNROCK,'\n')
+    print('Else  \n', lineELSE,'\n')
+    print('Total singles rate:\t\t\t',_sing,'events per sec at minimum buffer distance of 0.5 m\n')
+    print('Signal information')
+    print('Prompt positron Water volume \n', linePromptWaterVolume)
     signal = ['WaterVolume_delayedNeutron_ibd_n','WaterVolume_promptPositron_ibd_p']
     _str =  "bonsai_root_files%s/%s/histograms_U238_%4.3fPPM_Th232_%4.3fPPM_K_%4.3fPPM.root"%(additionalMacStr,_cover,float(arguments["--U238_PPM"]),float(arguments["--Th232_PPM"]),float(arguments["--K_PPM"]))
 
@@ -570,16 +570,16 @@ def readEfficiencyHistogram():
                         _maxOffset2 = offset
 
 
-            print 'Offset:',str(offset).rjust(3,' '),',Found max S/sqrt(S+B)',_maxSoverB,',(S,B,n9,dtw):(',_maxSignal,_maxBkgd,_maxOffn9,_maxOff_dtw,')'
+            print('Offset:',str(offset).rjust(3,' '),',Found max S/sqrt(S+B)',_maxSoverB,',(S,B,n9,dtw):(',_maxSignal,_maxBkgd,_maxOffn9,_maxOff_dtw,')')
             line += (_line + _line2,)
 
-    print '\n\nMore info on the maximal sensitivity found:'
+    print('\n\nMore info on the maximal sensitivity found:')
     # print line
 
     for _l in line:
         for i in range(len(_l)):
-            print _l[i],
-        print ''
+            print(_l[i], end=' ')
+        print('')
 
     cut_signal = 0.9
     sigma = 4.65 # 3-sigma 95% of the time, according to Owen report
@@ -599,7 +599,7 @@ def readEfficiencyHistogram():
     with open(_strRes,'a') as file:
         file.write(_res+'\n')
 
-    print '\n\nWriting histograms to file',_str
+    print('\n\nWriting histograms to file',_str)
     f_root = TFile(_str,"recreate")
     h.Write()
     hn.Write()
@@ -611,7 +611,7 @@ def readEfficiencyHistogram():
         _histograms["background_%d"%(offset)].Write()
     f_root.Close()
 
-    print '\n\nall done.'
+    print('\n\nall done.')
 
 
 
@@ -621,42 +621,42 @@ def findRate():
     d,proc,coverage = loadSimulationParametersNew()
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
 
-    print '\nLoading TANK activity:'
+    print('\nLoading TANK activity:')
     tankmass,tankact_60co,tankact_137cs = loadTankActivity()
-    print 'done.'
+    print('done.')
 
-    print '\nLoading CONCRETE activity:'
+    print('\nLoading CONCRETE activity:')
     concmass,concact_238u,concact_232th,concact_40k = loadConcreteActivity()
-    print 'done.'
+    print('done.')
 
-    print '\nLoading Shotcrete activity:'
+    print('\nLoading Shotcrete activity:')
     shotmass,act_238u,act_232th,act_40k = loadShotcreteActivity()
-    print 'done.'
+    print('done.')
 
-    print '\nLoading ROCK activity:'
+    print('\nLoading ROCK activity:')
     rockmass,act_238u,act_232th,act_40k = loadRockActivity()
-    print 'done.'
+    print('done.')
 
 
-    print '\nLoading PMT activity:'
+    print('\nLoading PMT activity:')
     mPMTs,mPMTsU238,mPMTsTh232,mPMTsK40 = loadPMTActivity()
-    print 'done.'
+    print('done.')
 
-    print '\nLoading VETO activity:'
+    print('\nLoading VETO activity:')
     mVETOs,mVETOsU238,mVETOsTh232,mVETOsK40 = loadVETOActivity()
-    print 'done.'
+    print('done.')
 
-    
+
     tankRadius  = float(arguments["--tankRadius"])-float(arguments['--steelThick'])
     tankHeight  = float(arguments["--halfHeight"])-float(arguments['--steelThick'])
     nKiloTons = pi*pow(tankRadius/1000.,2)*(2.*tankHeight/1000.)
     rRn222 = float(arguments["--Rn222"])*nKiloTons
-    print '\nLoaded Rn-222 activity of ',rRn222,'Bq per water volume, assumed a rate of %4.3e Bq/m^3'%(float(arguments["--Rn222"]))
+    print('\nLoaded Rn-222 activity of ',rRn222,'Bq per water volume, assumed a rate of %4.3e Bq/m^3'%(float(arguments["--Rn222"])))
 
     FreeProtons = 0.668559
     TNU         = FreeProtons* nKiloTons /1000./365./24./3600.
     boulbyIBDRate   = 800.*TNU
-    print '\nLoaded an IBD rate of ',boulbyIBDRate,' events per water volume per second, assumed a rate of %4.3e TNU'%(boulbyIBDRate/TNU)
+    print('\nLoaded an IBD rate of ',boulbyIBDRate,' events per water volume per second, assumed a rate of %4.3e TNU'%(boulbyIBDRate/TNU))
 
     innerRad = 12.5 #meters
     outerRad = 13.5 #meters
@@ -679,7 +679,7 @@ def findRate():
     skMuFlux        = 1.58e-7 #mu/cm2/sec
     radionuclideRate= (skRNRate*avgRNYieldRC/avgMuonSK)*muonRate*nKiloTons*1e9
     RN_boulby        = radionuclideRate[1]
-    print '\nLoaded mass of rock %e g. Fast Neutron Yield %e per sec; radionuclide yield %e per sec'%(rockMass,FN_boulby,RN_boulby)
+    print('\nLoaded mass of rock %e g. Fast Neutron Yield %e per sec; radionuclide yield %e per sec'%(rockMass,FN_boulby,RN_boulby))
     _strRes = "rate_%dmm_U238_%4.3fPPM_Th232_%4.3fPPM_K_%4.3fPPM_%s.txt"%(float(arguments['--vetoThickR']),float(arguments["--U238_PPM"]),float(arguments["--Th232_PPM"]),float(arguments["--K_PPM"]),arguments["-C"])
     _res = "%e %e %d %e %e %e"%(boulbyIBDRate,rRn222,mPMTs[0],mPMTsU238[0],mPMTsTh232[0],mPMTsK40[0])
     with open(_strRes,'a') as file:

@@ -1,4 +1,4 @@
-from load import *
+from .load import *
 
 
 def powerTables(year):
