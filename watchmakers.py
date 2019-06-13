@@ -10,11 +10,11 @@ from watchmakers.data import *
 
 if __name__ == "__main__":
 
-    print docstring
+    print(docstring)
     if arguments['-v']:
-    	print arguments
+    	print(arguments)
 #     print defaultValues
-    print ""
+    print("")
 
     if arguments['-m']:
         generateMacrosNew(int(arguments['-N']),int(arguments['-e']))

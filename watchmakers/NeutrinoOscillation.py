@@ -93,7 +93,7 @@ class NeutrinoOscillation:
             if s13_flag == None:
                 self.s13			= math.sqrt(0.0241) # (+0.0025/-0.0025)
             if visual!=0:
-                 print '\nUsing normal hierarchy'
+                 print('\nUsing normal hierarchy')
 
         elif hierarchy_flag == 1:
             self.dm13 		= 2.42e-3 + self.dm12/2.0        # (+0.07/-0.11)
@@ -103,7 +103,7 @@ class NeutrinoOscillation:
             if s13_flag == None:
                 self.s13			= math.sqrt(0.0244) # (+0.0023/-0.0025)
             if visual != 0:
-                print '\nUsing inverted hierarchy'
+                print('\nUsing inverted hierarchy')
 
         self.delta_31 	= 1.27*self.dm13
         self.delta_21 	= 1.27*self.dm12
@@ -114,32 +114,32 @@ class NeutrinoOscillation:
 
         if visual !=0:
 
-            print ' %s_12 = %0.4e \t\t %s_12 = %4.2f%s \t\t sin^2(2%s_12) = %0.3f \t\t tan^2(%s_12)  = %0.3f' % (u"\u03B8",
-                                                                                                                 self.t12,u"\u03B8",
-                                                                                                                 self.t12*180./math.pi,u"\xb0",
-                                                                                                                 u"\u03B8",
+            print(' %s_12 = %0.4e \t\t %s_12 = %4.2f%s \t\t sin^2(2%s_12) = %0.3f \t\t tan^2(%s_12)  = %0.3f' % ("\u03B8",
+                                                                                                                 self.t12,"\u03B8",
+                                                                                                                 self.t12*180./math.pi,"\xb0",
+                                                                                                                 "\u03B8",
                                                                                                                  math.sin(2.0*self.t12)*math.sin(2.0*self.t12),
-                                                                                                                 u"\u03B8",
-                                                                                                                 math.tan(self.t12)*math.tan(self.t12))
+                                                                                                                 "\u03B8",
+                                                                                                                 math.tan(self.t12)*math.tan(self.t12)))
 
-            print ' %s_23 = %0.4e \t\t %s_23 = %4.2f%s \t\t sin^2(2%s_23) = %0.3f' % (u"\u03B8",self.t23,
-                                                                                      u"\u03B8",
+            print(' %s_23 = %0.4e \t\t %s_23 = %4.2f%s \t\t sin^2(2%s_23) = %0.3f' % ("\u03B8",self.t23,
+                                                                                      "\u03B8",
                                                                                       self.t23*180./math.pi,
-                                                                                      u"\xb0",
-                                                                                      u"\u03B8",
-                                                                                      math.sin(2.0*self.t23)*math.sin(2.0*self.t23))
+                                                                                      "\xb0",
+                                                                                      "\u03B8",
+                                                                                      math.sin(2.0*self.t23)*math.sin(2.0*self.t23)))
 
-            print ' %s_13 = %0.4e \t\t %s_13 =  %4.2f%s \t\t sin^2(2%s_13) = %0.3f' % (u"\u03B8",
+            print(' %s_13 = %0.4e \t\t %s_13 =  %4.2f%s \t\t sin^2(2%s_13) = %0.3f' % ("\u03B8",
                                                                                        self.t13,
-                                                                                       u"\u03B8",
+                                                                                       "\u03B8",
                                                                                        self.t13*180./math.pi,
-                                                                                       u"\xb0",
-                                                                                       u"\u03B8",
-                                                                                       math.sin(2.0*self.t13)*math.sin(2.0*self.t13))
+                                                                                       "\xb0",
+                                                                                       "\u03B8",
+                                                                                       math.sin(2.0*self.t13)*math.sin(2.0*self.t13)))
 
-            print ' %s_12 = %0.4e eV**2' % (u"\u0394",self.dm12)
-            print ' %s_23 = %0.4e eV**2' % (u"\u0394",self.dm23)
-            print ' %s_13 = %0.4e eV**2\n' % (u"\u0394",self.dm13)
+            print(' %s_12 = %0.4e eV**2' % ("\u0394",self.dm12))
+            print(' %s_23 = %0.4e eV**2' % ("\u0394",self.dm23))
+            print(' %s_13 = %0.4e eV**2\n' % ("\u0394",self.dm13))
 
         GWth       = 2e20              # neutrino per GWth
         av_num     = 6.02214129e23     # mol^-1 2 H
@@ -164,12 +164,12 @@ class NeutrinoOscillation:
         self.rate   = power * GWth * xsect * protons  * time / length**2/ (4.0*math.pi)
 
         if visual != 0 :
-            print 'Detector and reactor characteristics:'
-            print ' Detector mass             : %4.3f' %(mass)
-            print '          proton-target    : %4.3e' %(protons)
-            print ' Reactor  power (GWth)     : %4.3f' %(power)
-            print '          distance (km)    : %4.3f' %(standoff)
-            print ' Neutrino rate in detector : %4.3f per day (pre-osc, pre-efficiency)' %(self.rate)
+            print('Detector and reactor characteristics:')
+            print(' Detector mass             : %4.3f' %(mass))
+            print('          proton-target    : %4.3e' %(protons))
+            print(' Reactor  power (GWth)     : %4.3f' %(power))
+            print('          distance (km)    : %4.3f' %(standoff))
+            print(' Neutrino rate in detector : %4.3f per day (pre-osc, pre-efficiency)' %(self.rate))
 
         mNeutron        = 939.565378
         mProton         = 938.27
@@ -274,7 +274,7 @@ class NeutrinoOscillation:
 
         self.afterOsc = self.rate * self.nuOsc_IBDEnergy.Integral(1.806,14)/self.IBDEnergy.Integral(1.806,14)
         if visual!=0:
-            print ' Neutrino rate in detector : %4.3f per day (after-osc, pre-efficiency)' %(self.afterOsc)
+            print(' Neutrino rate in detector : %4.3f per day (after-osc, pre-efficiency)' %(self.afterOsc))
 
         self.nuOsc_IBDEnergy.SetNpx(10000)
         self.nuOsc_IBDEnergy.SetLineColor(4)
@@ -315,16 +315,16 @@ class NeutrinoOscillation:
 #
 if __name__ == "__main__":
 
-    print 'Code written by Marc Bergevin, circa 2014.  Please feel free to \nuse and modify the code, but give me a shoot-out if possible.\n'
+    print('Code written by Marc Bergevin, circa 2014.  Please feel free to \nuse and modify the code, but give me a shoot-out if possible.\n')
 
-    personalDetector    = raw_input('Would you like to define your own detector (yes/no)?:')
+    personalDetector    = input('Would you like to define your own detector (yes/no)?:')
 
     if personalDetector == 'yes':
         # Define your very own detector
-        detectorMedium      = int(raw_input('What detector medium (liquid scintillator=0,water=1)?:\n'))
-        detectorMass        = float(raw_input('What detector mass (ton)?:\n'))
-        reactorPower        = float(raw_input('What is the reactor power (GWth)?:\n'))
-        reactorStandoff     = float(raw_input('What is the reactor to detector distance (km)?:\n'))
+        detectorMedium      = int(input('What detector medium (liquid scintillator=0,water=1)?:\n'))
+        detectorMass        = float(input('What detector mass (ton)?:\n'))
+        reactorPower        = float(input('What is the reactor power (GWth)?:\n'))
+        reactorStandoff     = float(input('What is the reactor to detector distance (km)?:\n'))
     else:
         # Define the Double Chooz detector as default
         detectorMedium      = 0

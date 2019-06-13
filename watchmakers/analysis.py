@@ -1,5 +1,5 @@
-from load import *
-from io_operations import testEnabledCondition
+from .load import *
+from .io_operations import testEnabledCondition
 from ROOT import gDirectory
 
 fidRadius = float(arguments['--tankRadius'])-float(arguments['--steelThick'])-float(arguments['--vetoThickR'])-float(arguments['--fidThick'])
@@ -43,7 +43,7 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
     additionalString  = para[0]
     arbre = {}
     arbre["rfile"] = TFile(file)
-    print 'Reading', file
+    print('Reading', file)
     try:
         runSummary = arbre["rfile"].Get('runSummary')
         Entries = runSummary.GetEntries()
@@ -51,7 +51,7 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
         events = 0
         _eventPerRun = runSummary.nEvents
     except:
-        print 'File',file,'did not have run associated with it. Returning empty histogram.'
+        print('File',file,'did not have run associated with it. Returning empty histogram.')
         binR,rangeRmin,rangeRmax = 31,0.45,3.55
         binwidthR = (rangeRmax-rangeRmin)/binR
         binN,rangeNmin,rangeNmax = 48,7.5,55.5
@@ -87,7 +87,7 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
     for _d in drange(rangeRmin+binwidthR/2.,rangeRmax,binwidthR):
         minAchieve = 0
 
-        print '\nD:',_d
+        print('\nD:',_d)
         # h['hist%s'%(_tag)].Fill(_d,rangeNmin+binwidthN/2.0,eff)
         for _n9 in range(int(rangeNmin+binwidthN/2.0),int(rangeNmax)):
             cond = "closestPMT/1000.>%f"%(_d)
@@ -116,7 +116,7 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
             else:
                 h.Fill(_d,_n9,1./totalEvents)
                 eff =  1./totalEvents
-            print '(%2d,%4.2e),'%(_n9,eff),
+            print('(%2d,%4.2e),'%(_n9,eff), end=' ')
 
     h.SaveAs("bonsai_root_files%s/%s/hist%s.C"%(additionalString,cover,_tag))
     arbre["rfile"].Close()
@@ -132,7 +132,7 @@ _posGood=0.1,_dirGood=0.1):
     additionalString  = para[0]
     arbre = {}
     arbre["rfile"] = TFile(file)
-    print 'Reading', file
+    print('Reading', file)
     try:
         runSummary = arbre["rfile"].Get('runSummary')
         Entries = runSummary.GetEntries()
@@ -140,7 +140,7 @@ _posGood=0.1,_dirGood=0.1):
         events = 0
         _eventPerRun = runSummary.nEvents
     except:
-        print 'File',file,'did not have run associated with it. Returning empty histogram.'
+        print('File',file,'did not have run associated with it. Returning empty histogram.')
         binR,rangeRmin,rangeRmax = 31,0.0, 1.0
         binwidthR = (rangeRmax-rangeRmin)/binR
         binN,rangeNmin,rangeNmax = 48,-1.0*pmtHeight,pmtHeight

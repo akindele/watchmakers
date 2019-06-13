@@ -1,4 +1,4 @@
-from load import *
+from .load import *
 
 # The purpose of this class is to handle the input/ouput operations of
 # WATCHMAKERS (WM). This include creating directories and files for the different
@@ -18,9 +18,9 @@ def deleteDirectory(directory):
 def testCreateDirectoryIfNotExist(directory):
 
     if os.path.exists(directory):
-        print '''There is already a directory here. %s
+        print('''There is already a directory here. %s
 No new directory has been made. Bad idea. Consider saving current files
-and using --force.        \n'''%(directory)
+and using --force.        \n'''%(directory))
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -111,7 +111,7 @@ def macroGeneratorNew(percentage,location,element,_dict,runs,events,dirOpt):
         elif location == 'VETO':
             line1 = '''
 /generator/add decaychain %s:regexfill:poisson
-/generator/pos/set veto_pmts[0-9]+             
+/generator/pos/set veto_pmts[0-9]+
 /generator/rate/set %f
 /run/beamOn %d''' %(element,rate,events*2)
         else:
@@ -166,7 +166,7 @@ def macroGeneratorNew(percentage,location,element,_dict,runs,events,dirOpt):
 
 
     else:
-        print 'Could not find ',element,location.lower()
+        print('Could not find ',element,location.lower())
         line1 = ''
     return header+line1
 
@@ -322,7 +322,7 @@ export G4NEUTRONHP_USE_ONLY_PHOTONEVAPORATION=1\n
     rootDir,g4Dir,g4Dir,ratDir,watchmakersDir)
 
     if arguments['--newVers']:
-        print
+        print()
     else:
         for mods in models:
             if location == "FN":
@@ -353,8 +353,8 @@ def generateMacros(N,e):
 
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
 
-    print additionalMacOpt
-    print N,e
+    print(additionalMacOpt)
+    print(N,e)
 
     ##Clean or create macro directories
     for j in range(len(iso)):
@@ -382,8 +382,8 @@ def generateMacrosNew(N,e):
     d,proc,coverage = loadSimulationParametersNew()
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
 
-    print additionalMacOpt
-    print N,e
+    print(additionalMacOpt)
+    print(N,e)
 
     cnt = 0
 
@@ -393,7 +393,7 @@ def generateMacrosNew(N,e):
                 for _element in d[_p]:
                     cond1 = ('pct' in _cover)==0 and (_loc == 'GUNITE' or _loc == 'CONCRETE')!=1
                     cond2 = ('pct' in _cover)==1
-                    print _cover,_loc,cond1,cond2, cond1 or cond2
+                    print(_cover,_loc,cond1,cond2, cond1 or cond2)
                     if cond1 or cond2:
                         for i in range(N/10+1):
                             dir = "macro%s/%s/%s/%s/%s/run%08d/"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
@@ -435,23 +435,23 @@ def generateJobsNew(N,arguments):
             for idx,_cover in enumerate(coverage):
                 for _element in d[_p]:
                     # print cnt,_p,element,_loc,cover
-                    print _p,_loc,_cover,_element
+                    print(_p,_loc,_cover,_element)
                     for i in range(N/10+1):
                         dir = "root_files%s/%s/%s/%s/%s/run%08d"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                         if arguments['--force']:
-                            print 'Using force to recreate dir:',dir
+                            print('Using force to recreate dir:',dir)
                             testCreateDirectory(dir)
                         else:
                             testCreateDirectoryIfNotExist(dir)
                         dir = "bonsai_root_files%s/%s/%s/%s/%s/run%08d"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                         if arguments['--force']:
-                            print 'Using force to recreate dir:',dir
+                            print('Using force to recreate dir:',dir)
                             testCreateDirectory(dir)
                         else:
                             testCreateDirectoryIfNotExist(dir)
                         dir = "log%s/%s/%s/%s/%s/run%08d"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                         if arguments['--force']:
-                            print 'Using force to recreate dir:',dir
+                            print('Using force to recreate dir:',dir)
                             testCreateDirectory(dir)
                         else:
                             testCreateDirectoryIfNotExist(dir)
@@ -471,14 +471,14 @@ def generateJobsNew(N,arguments):
         src = '%s/fit_param.dat'%(ratDir)
         dst = os.getcwd()+'/fit_param.dat'
         if not os.path.exists(dst):
-                os.system("rsync -avz %s %s "%(src,dst))
+            os.system("rsync -avz %s %s "%(src,dst))
 
         src = '%s/like.bin'%(ratDir)
         dst = os.getcwd()+'/like.bin'
         if not os.path.exists(dst):
-                os.system("rsync -avz %s %s "%(src,dst))
+            os.system("rsync -avz %s %s "%(src,dst))
     elif arguments["--singularity"]:
-	src = '/src/rat-pac/fit_param.dat'
+        src = '/src/rat-pac/fit_param.dat'
         dst = '%s/fit_param.dat'%(os.environ['PWD'])
         if not os.path.exists(dst):
             os.system("singularity exec --bind $PWD %s /usr/bin/rsync -avz %s %s "%(arguments['--simg'],src,dst))
@@ -489,15 +489,15 @@ def generateJobsNew(N,arguments):
             os.system("singularity exec --bind $PWD %s /usr/bin/rsync -avz %s %s "%(arguments['--simg'],src,dst))
 
     else:
-    	src = ratDir+'/fit_param.dat'
-    	dst = os.getcwd()+'/fit_param.dat'
-    	if not os.path.exists(dst):
-        	os.symlink(src,dst)
+        src = ratDir+'/fit_param.dat'
+        dst = os.getcwd()+'/fit_param.dat'
+        if not os.path.exists(dst):
+            os.symlink(src,dst)
 
-    	src = ratDir+'/like.bin'
-    	dst = os.getcwd()+'/like.bin'
-    	if not os.path.exists(dst):
-        	os.symlink(src,dst)
+        src = ratDir+'/like.bin'
+        dst = os.getcwd()+'/like.bin'
+        if not os.path.exists(dst):
+            os.symlink(src,dst)
 
 
 
@@ -510,7 +510,7 @@ def generateJobsNew(N,arguments):
 
     if arguments["--singularity"]:
         srat    = "singularity exec --bind $PWD %s /src/rat-pac/bin/rat" %(arguments["--simg"])
-	sbonsai = "singularity exec --bind $PWD %s /src/rat-pac/tools/bonsai/bonsai"%(arguments["--simg"]) 
+        sbonsai = "singularity exec --bind $PWD %s /src/rat-pac/tools/bonsai/bonsai"%(arguments["--simg"])
 
 
     outfile_jobs = open('sub_job_%s'%(additionalMacStr),"wb")
@@ -525,23 +525,23 @@ def generateJobsNew(N,arguments):
                     if cond1 or cond2:
                         dir = "jobs%s/%s/%s/%s/%s"%(additionalMacStr,_cover,_loc,_element,_p)
                         if arguments['--force']:
-                            print 'Using force to recreate dir:',dir
+                            print('Using force to recreate dir:',dir)
                             testCreateDirectory(dir)
                         else:
                             testCreateDirectoryIfNotExist(dir)
-			if sheffield:
+                        if sheffield:
                             outfile_jobs.writelines('condor_qsub %s\n'%(dir+'/job%08d.sh'%(0)))
-			else: 
+                        else:
                             outfile_jobs.writelines('msub %s\n'%(dir+'/job%08d.sh'%(0)))
                         log = "log%s/%s/%s/%s/%s/log"%(additionalMacStr,_cover,_loc,_element,_p)
                         for i in range(N/10+1):
                             dir = "jobs%s/%s/%s/%s/%s"%(additionalMacStr,_cover,_loc,_element,_p)
                             outfile = open(dir+'/job%08d.sh'%(i*10),"wb")
-			    #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXG)
-    			    #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXU)
+                            #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXG)
+                            #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXU)
                             job_line = "%s_%s_%s_%s_%s_%s"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                             if arguments["--docker"]:
-				outfile.writelines("""#!/bin/sh
+                                outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
 #MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
@@ -555,8 +555,8 @@ def generateJobsNew(N,arguments):
 source $HOME/software/docker_watchman/env.sh
 
 """%(job_line,log+'.out',log+'.err',directory))
-			    elif arguments["--singularity"]:
-				outfile.writelines("""#!/bin/sh
+                            elif arguments["--singularity"]:
+                                outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
 #MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
@@ -571,7 +571,7 @@ source $HOME/software/docker_watchman/env.sh
 
 """%(job_line,log+'.out',log+'.err',directory))
                             else:
-				outfile.writelines("""#!/bin/sh
+                                outfile.writelines("""#!/bin/sh
 #MSUB -N job_%s    #name of job
 #MSUB -A ait         # sets bank account
 #MSUB -l nodes=1:ppn=1,walltime=73:59:59,partition=borax  # uses 1 node
@@ -589,23 +589,23 @@ source %s/env.sh
 source %s/env_wm.sh\n\n"""%(job_line,log+'.out',log+'.err',directory,\
                             rootDir,g4Dir,g4Dir,ratDir,watchmakersDir))
                             for _j in range(10):
-				if i*10+_j < N:
-                                	mac = "macro%s/%s/%s/%s/%s/run%08d/run_%08d.mac"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
-                                	r_outfile = "root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
-                                	l_outfile = "log%s/%s/%s/%s/%s/run%08d/run_%08d.log"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
-                                	b_outfile = "bonsai_root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
-                                	if arguments["--docker"]:
-						lines = '''drat %s %s %s
-    (dbonsai %s %s || dbonsai %s %s ||dbonsai %s %s ||dbonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
-					elif arguments["--singularity"]:
-						lines = '''%s %s -o %s -l %s
-    (%s %s %s || %s %s %s ||%s %s %s ||%s %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(srat,mac,r_outfile,l_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,l_outfile)
-					else:
-						lines = '''rat %s -o %s -l %s
-    (bonsai %s %s || bonsai %s %s ||bonsai %s %s ||bonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
-                                	outfile.writelines(lines)
+                                if i*10+_j < N:
+                                    mac = "macro%s/%s/%s/%s/%s/run%08d/run_%08d.mac"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
+                                    r_outfile = "root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
+                                    l_outfile = "log%s/%s/%s/%s/%s/run%08d/run_%08d.log"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
+                                    b_outfile = "bonsai_root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(additionalMacStr,_cover,_loc,_element,_p,i*10,i*10+_j)
+                                    if arguments["--docker"]:
+                                        lines = '''drat %s %s %s
+(dbonsai %s %s || dbonsai %s %s ||dbonsai %s %s ||dbonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
+                                    elif arguments["--singularity"]:
+                                        lines = '''%s %s -o %s -l %s
+(%s %s %s || %s %s %s ||%s %s %s ||%s %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(srat,mac,r_outfile,l_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,sbonsai,r_outfile,b_outfile,l_outfile)
+                                    else:
+                                        lines = '''rat %s -o %s -l %s
+(bonsai %s %s || bonsai %s %s ||bonsai %s %s ||bonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
+                                    outfile.writelines(lines)
                             if i*10+10  < N:
-				outfile.writelines("(msub %s || ./%s)"%(dir+'/job%08d.sh'%((i+1)*10),dir+'/job%08d.sh'%((i+1)*10)))
+                                outfile.writelines("(msub %s || ./%s)"%(dir+'/job%08d.sh'%((i+1)*10),dir+'/job%08d.sh'%((i+1)*10)))
                             outfile.close()
 
 
@@ -737,7 +737,7 @@ def testEnabledCondition(arguments):
 
     if float(arguments['--fidThick'])!= defaultValues[7]:
         additionalString += "_fidThickness_%f" %(float(arguments['--fidThick']))
-	additionalMacStr += "_fidThickness_%f" %(float (arguments['--fidThick']))
+        additionalMacStr += "_fidThickness_%f" %(float (arguments['--fidThick']))
         additionalCommands +=" --fidThick %f" %(float(arguments['--fidThick']))
 
     if arguments['--pmtCtrPoint']:
@@ -798,7 +798,7 @@ def mergeNtupleFilesNew(arguments):
                         _tmp =  "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
                         trees[_tmp] = TChain("data")
                         trees[_tmp+'_RS'] = TChain("runSummary")
-                        print _tmp
+                        print(_tmp)
                         for _ii in range(N):# Covers up to 1000 jobs,
                             i = _ii/10
                             dir = "%s/bonsai_root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(directory,additionalMacStr,_cover,_loc,_element,_p,i*10,_ii)
@@ -812,10 +812,10 @@ def mergeNtupleFilesNew(arguments):
                                         trees[_tmp].Add(dir)
                                         trees[_tmp+'_RS'].Add(dir)
                                     else:
-                                        print 'No tree in file',dir
+                                        print('No tree in file',dir)
                                 _ff.Close()
                             except:
-                                print 'Could not read ',dir
+                                print('Could not read ',dir)
                         data = gROOT.FindObject('data')
                         fLocation = "%s/bonsai_root_files%s/%s/merged_%s_%s_%s.root"%(directory,additionalMacStr,_cover,_loc,_element,_p)
                         fLocationSum = "%s/bonsai_root_files%s/%s/mergedSumary_%s_%s_%s.root"%(directory,additionalMacStr,_cover,_loc,_element,_p)
@@ -826,18 +826,18 @@ def mergeNtupleFilesNew(arguments):
                         try:
                             totEvents = totalEntries*runSummary.nEvents
                         except:
-                            print 'Something went wrong'
+                            print('Something went wrong')
                             totEvents = -1
                         dir = "%s/bonsai_root_files%s/%s/%s/%s/%s/run********/run_********.root"%(directory,additionalMacStr,_cover,_loc,_element,_p)
-                        print 'Merging :\n\t',dir, '\n->\n\t', fLocation, \
+                        print('Merging :\n\t',dir, '\n->\n\t', fLocation, \
                         ';\ntotal entries (trigger/total):', nEntry,'/',totEvents,\
-                        ',merged a total of ',totalEntries,'files.'
+                        ',merged a total of ',totalEntries,'files.')
                         _f = TFile(fLocation,"recreate")
                         data.Write()
                         runSummary.Write()
                         _f.Close()
 
-                        print 'done\n'
+                        print('done\n')
                         trees[_tmp].Delete()
                         trees[_tmp+'_RS'].Delete()
 

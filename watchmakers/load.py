@@ -22,7 +22,7 @@ try:
 
     warnings.simplefilter("ignore")
 except:
-    print "Could not load in root_numpy or rootpy, they are required to run this module."
+    print("Could not load in root_numpy or rootpy, they are required to run this module.")
 
 defaultValues  = [3,2500,2805.,\
 10026.35,10026.35,3080.0,6.35,1000.,\
@@ -47,7 +47,7 @@ docstring = """
     --simg=<simg>       What singularity image will you be using [Default: /usr/gapps/adg/geant4/rat_pac_and_dependency/AITWATCHMAN/watch.simg]
     --newVers=<nv>      Major revision to Watchmakers. By default on, but can use old vers [Default: 1]
     --force             Forcing the recreation of the root_file,bonsai_root_file and log folders
-    --noRoot            Allows to generate scripts without loading in any ROOT module
+    --noRoot=<nr>       Allows to generate scripts without loading in any ROOT module [Default: 1]
     -v                  Verbose. Allow print out of additional information.
 
 
@@ -150,16 +150,16 @@ docstring = """
 try:
     import docopt
     arguments = docopt.docopt(docstring)
-    print '\nUsing docopt as the user control interface\n'
+    print('\nUsing docopt as the user control interface\n')
 except ImportError:
-    print 'docopt is not a recognized module, it is required to run this module'
+    print('docopt is not a recognized module, it is required to run this module')
 
 
 
 if (arguments['--vetoThickZ'] and arguments['--vetoThickR']):
-        print "Argument provided for veto radius and height"
+        print("Argument provided for veto radius and height")
 else:
-        print "No argument provided for veto radius and height, assumes shieldThick value for both"
+        print("No argument provided for veto radius and height, assumes shieldThick value for both")
         arguments['--vetoThickR'] = arguments['--shieldThick']
         arguments['--vetoThickZ'] = arguments['--shieldThick']
 
@@ -172,12 +172,12 @@ if not (arguments['--K_vPPM']):
         arguments['--K_vPPM'] = '260.0'
         
 if (arguments['--vpc']):
-     print "Arguments provided for the veto covereage"
+     print("Arguments provided for the veto covereage")
 else:
      arguments['--vpc'] = "0.002"
     
 if arguments['--noRoot']:
-    print 'Not loading any ROOT modules. usefull for generating files on oslic'
+    print('Not loading any ROOT modules. usefull for generating files on oslic')
     
 else:
     from ROOT import TRandom3
@@ -269,21 +269,21 @@ def loadActivity():
     PPM_U238    = float(arguments["--U238_PPM"])
     ActivityU238= Lambda_U238*PPM_U238/M_U238/1e6
     mPMTsU238 = [s*ActivityU238 for s in mPMTs]
-    print 'U238',mPMTsU238, ', PPM:',PPM_U238
+    print('U238',mPMTsU238, ', PPM:',PPM_U238)
 
     M_Th232,Lambda_Th232,Abund_Th232 = 3.853145e-25, 1.57e-18,1.0
     PPM_Th232    = float(arguments["--Th232_PPM"])
     ActivityTh232= Lambda_Th232*PPM_Th232/M_Th232/1e6
     mPMTsTh232 = [s*ActivityTh232 for s in mPMTs]
-    print 'Th232',mPMTsTh232, ', PPM:',PPM_Th232
+    print('Th232',mPMTsTh232, ', PPM:',PPM_Th232)
 
     M_K,Lambda_K,Abund_K = 6.636286e-26,1.842e-18,0.00117
     PPM_K    = float(arguments["--K_PPM"])
     ActivityK= Lambda_K*PPM_K/M_K/1e6
     mPMTsK = [s*ActivityK for s in mPMTs]
-    print 'K',mPMTsK, ', PPM:',PPM_K
+    print('K',mPMTsK, ', PPM:',PPM_K)
 
-    print
+    print()
 
     return mPMTs
 
@@ -304,28 +304,28 @@ def loadPMTActivity():
     cPMTs = [float(s.strip('pct'))/100.*numPMTs for s in coverage]
     mPMTs = [s*mass for s in cPMTs]
 
-    print "Num pmts", cPMTs
-    print "Total Mass",mPMTs
+    print("Num pmts", cPMTs)
+    print("Total Mass",mPMTs)
 
     M_U238,Lambda_U238,Abund_U238 = 3.953e-25,4.916e-18,0.992745
     PPM_U238    = float(arguments["--U238_PPM"])
     ActivityU238= Lambda_U238*PPM_U238/M_U238/1e6
     mPMTsU238 = [s*ActivityU238 for s in mPMTs]
-    print 'U238',mPMTsU238, ', PPM:',PPM_U238,'activity per PMT:', ActivityU238*mass,'Bq per PMT per isotope in chain'
+    print('U238',mPMTsU238, ', PPM:',PPM_U238,'activity per PMT:', ActivityU238*mass,'Bq per PMT per isotope in chain')
 
     M_Th232,Lambda_Th232,Abund_Th232 = 3.853145e-25, 1.57e-18,1.0
     PPM_Th232    = float(arguments["--Th232_PPM"])
     ActivityTh232= Lambda_Th232*PPM_Th232/M_Th232/1e6
     mPMTsTh232 = [s*ActivityTh232 for s in mPMTs]
-    print 'Th232',mPMTsTh232, ', PPM:',PPM_Th232, 'activity per PMT:', ActivityTh232*mass,'Bq per PMT per isotope in chain'
+    print('Th232',mPMTsTh232, ', PPM:',PPM_Th232, 'activity per PMT:', ActivityTh232*mass,'Bq per PMT per isotope in chain')
 
     M_K,Lambda_K,Abund_K = 6.636286e-26,1.842e-18,0.00117
     PPM_K    = float(arguments["--K_PPM"])
     ActivityK= Lambda_K*PPM_K/M_K/1e6*Abund_K
     mPMTsK = [s*ActivityK for s in mPMTs]
-    print 'K',mPMTsK, ', PPM:',PPM_K, 'activity per PMT:', ActivityK*mass,'Bq per PMT per isotope in chain'
+    print('K',mPMTsK, ', PPM:',PPM_K, 'activity per PMT:', ActivityK*mass,'Bq per PMT per isotope in chain')
 
-    print
+    print()
 
     return mPMTs,mPMTsU238,mPMTsTh232,mPMTsK
 
@@ -345,29 +345,29 @@ def loadVETOActivity():
     cVETOs = float(arguments["--vpc"])*numPMTs
     mVETOs = mass*cVETOs
 
-    print "Number of Veto", cVETOs
-    print "Total Mass", mVETOs
+    print("Number of Veto", cVETOs)
+    print("Total Mass", mVETOs)
 
     M_U238,Lambda_U238,Abund_U238 = 3.953e-25,4.916e-18,0.992745
     PPM_U238    = float(arguments["--U238_vPPM"])
     ActivityU238= Lambda_U238*PPM_U238/M_U238/1e6
     mVETOsU238 = mVETOs*ActivityU238
-    print 'U238',mVETOsU238, ', PPM:',PPM_U238,'activity per PMT:', ActivityU238*mass,'Bq per PMT per isotope in chain'
+    print('U238',mVETOsU238, ', PPM:',PPM_U238,'activity per PMT:', ActivityU238*mass,'Bq per PMT per isotope in chain')
 
     M_Th232,Lambda_Th232,Abund_Th232 = 3.853145e-25, 1.57e-18,1.0
     PPM_Th232    = float(arguments["--Th232_vPPM"])
     ActivityTh232= Lambda_Th232*PPM_Th232/M_Th232/1e6
     mVETOsTh232 = mVETOs*ActivityTh232
-    print 'Th232',mVETOsTh232, ', PPM:',PPM_Th232, 'activity per PMT:', ActivityTh232*mass,'Bq per PMT per isotope in chain'
+    print('Th232',mVETOsTh232, ', PPM:',PPM_Th232, 'activity per PMT:', ActivityTh232*mass,'Bq per PMT per isotope in chain')
 
 
     M_K,Lambda_K,Abund_K = 6.636286e-26,1.842e-18,0.00117
     PPM_K    = float(arguments["--K_PPM"])
     ActivityK= Lambda_K*PPM_K/M_K/1e6*Abund_K
     mVETOsK = mVETOs*ActivityK
-    print 'K',mVETOsK, ', PPM:',PPM_K, 'activity per PMT:', ActivityK*mass,'Bq per PMT per isotope in chain'
+    print('K',mVETOsK, ', PPM:',PPM_K, 'activity per PMT:', ActivityK*mass,'Bq per PMT per isotope in chain')
 
-    print
+    print()
 
     return mVETOs,mVETOsU238,mVETOsTh232,mVETOsK
 
@@ -385,16 +385,16 @@ def loadTankActivity():                                         ##added by Leah:
     tankvol = V1 - V2                                           ##hollow cylinder m^3
     tankmass = tankvol*density
 
-    print "Total steel mass",tankmass,"kg"
+    print("Total steel mass",tankmass,"kg")
 
     ##STAINLESS STEEL CONTAINS 60CO, 137CS
     act_60co = 19e-3                                           ##mean value from "Measurements of extremely low radioactivity in stainless steel" paper Bq per kg
     tankact_60co = tankmass * act_60co                          ##activity in Bq
-    print "60Co in tank steel:\n activity per kilogram:", act_60co,"Bq/kg,\n total activity:",tankact_60co,"Bq"
+    print("60Co in tank steel:\n activity per kilogram:", act_60co,"Bq/kg,\n total activity:",tankact_60co,"Bq")
 
     act_137cs = 0.77e-3                                         ##mean value from "Measurements of extremely low radioactivity in stainless steel" paper Bq per kg
     tankact_137cs = tankmass * act_137cs                        ##activity in Bq
-    print "137Cs in tank steel:\n activity per kilogram:", act_137cs,"Bq/kg,\n total activity:",tankact_137cs,"Bq"
+    print("137Cs in tank steel:\n activity per kilogram:", act_137cs,"Bq/kg,\n total activity:",tankact_137cs,"Bq")
 
     return tankmass,tankact_60co,tankact_137cs
 
@@ -407,21 +407,21 @@ def loadConcreteActivity():                                     ##added by Leah:
 									#inner diameter 25m, plus 0.5m base of diameter 26m
     concmass = concvol * density
 
-    print "Total concrete slab mass",concmass,"kg"
+    print("Total concrete slab mass",concmass,"kg")
 
 ##CONCRETE CONTAINS 238U, 232TH, 40K
 
     act_238u = 61                                              ##mean UK value from "Natural radioactivity in building materials in the European Union" paper Bq per kg
     concact_238u = concmass * act_238u                         ##activity in Bq
-    print "238U in concrete slab:\n activity per kilogram:", act_238u,"Bq/kg,\n total activity:",concact_238u,"Bq"
+    print("238U in concrete slab:\n activity per kilogram:", act_238u,"Bq/kg,\n total activity:",concact_238u,"Bq")
 
     act_232th = 30                                              ##mean UK value from "Natural radioactivity in building materials in the European Union" paper Bq per kg
     concact_232th = concmass * act_232th                        ##activity in Bq
-    print "232Th in concrete slab:\n activity per kilogram:", act_232th,"Bq/kg,\n total activity:",concact_232th,"Bq"
+    print("232Th in concrete slab:\n activity per kilogram:", act_232th,"Bq/kg,\n total activity:",concact_232th,"Bq")
 
     act_40k = 493                                               ##mean UK value from "Natural radioactivity in building materials in the European Union" paper Bq per kg
     concact_40k = concmass * act_40k                            ##activity in Bq
-    print "40K in concrete slab:\n activity per kilogram:", act_40k,"Bq/kg,\n total activity:",concact_40k,"Bq"
+    print("40K in concrete slab:\n activity per kilogram:", act_40k,"Bq/kg,\n total activity:",concact_40k,"Bq")
 
     return concmass,concact_238u,concact_232th,concact_40k
 ###gravel under concrete? 24in
@@ -442,28 +442,28 @@ def loadShotcreteActivity():
     shotvol = V1 - V2                                           ##hollow cylinder m^3
     shotmass = shotvol*density
 
-    print "Total shotcrete mass",shotmass,"kg"
+    print("Total shotcrete mass",shotmass,"kg")
 
     mass_238u = 3.953e-5
     lambda_238u = 4.916e-18
     abund_238u = 0.992745
     ppm_238u = 2.6
     act_238u =( (lambda_238u * ppm_238u)/mass_238u/1e6)*shotmass
-    print "238U in shotcrete coating:\n ppm:", ppm_238u,"\n total activity:",act_238u,"Bq"
+    print("238U in shotcrete coating:\n ppm:", ppm_238u,"\n total activity:",act_238u,"Bq")
 
     mass_232th = 3.853145e-25
     lambda_232th = 1.57e-18
     abund_232th = 1.0
     ppm_232th = 14
     act_232th = ((lambda_232th * ppm_232th)/mass_232th/1e6)*shotmass
-    print "232Th in shotcrete coating:\n ppm:", ppm_232th,"\n total activity:",act_232th,"Bq"
+    print("232Th in shotcrete coating:\n ppm:", ppm_232th,"\n total activity:",act_232th,"Bq")
 
     mass_40k = 6.636286e-26
     lambda_40k = 1.842e-18
     abund_40k = 0.00117
     ppm_40k = 16000           ##1.6%
     act_40k = ((lambda_40k * ppm_40k)/mass_40k/1e6)*shotmass
-    print "40K in shotcrete coating:\n ppm:", ppm_40k,"\n total activity:",act_40k,"Bq"
+    print("40K in shotcrete coating:\n ppm:", ppm_40k,"\n total activity:",act_40k,"Bq")
 
     return shotmass,act_238u,act_232th,act_40k
 
@@ -487,28 +487,28 @@ def loadRockActivity():
 								##plus 0.5m concrete layer on walls and floor 
     rockmass = rockvol*density
 
-    print "Total relevant rock mass",rockmass,"kg"
+    print("Total relevant rock mass",rockmass,"kg")
 
     mass_238u = 3.953e-5
     lambda_238u = 4.916e-18
     abund_238u = 0.992745
     ppm_238u = 0.067
     act_238u =( (lambda_238u * ppm_238u)/mass_238u/1e6)*rockmass
-    print "238U in shotcrete coating:\n ppm:", ppm_238u,"\n total activity:",act_238u,"Bq"
+    print("238U in shotcrete coating:\n ppm:", ppm_238u,"\n total activity:",act_238u,"Bq")
 
     mass_232th = 3.853145e-25
     lambda_232th = 1.57e-18
     abund_232th = 1.0
     ppm_232th = 0.125
     act_232th = ((lambda_232th * ppm_232th)/mass_232th/1e6)*rockmass
-    print "232Th in shotcrete coating:\n ppm:", ppm_232th,"\n total activity:",act_232th,"Bq"
+    print("232Th in shotcrete coating:\n ppm:", ppm_232th,"\n total activity:",act_232th,"Bq")
 
     mass_40k = 6.636286e-26
     lambda_40k = 1.842e-18
     abund_40k = 0.00117
     ppm_40k = 1130
     act_40k = ((lambda_40k * ppm_40k)/mass_40k/1e6)*rockmass
-    print "40K in shotcrete coating:\n ppm:", ppm_40k,"\n total activity:",act_40k,"Bq"
+    print("40K in shotcrete coating:\n ppm:", ppm_40k,"\n total activity:",act_40k,"Bq")
 
     return rockmass,act_238u,act_232th,act_40k
 
