@@ -371,7 +371,7 @@ def generateMacros(N,e):
                     dir = "macro%s/%s/%s" %(additionalMacStr,ii,cover)
 
                     outfile = open("%s/run%s_%s_%d.mac" %(dir,ii,\
-                    loc[j],val),"wb")
+                    loc[j],val),"w+")
                     outfile.writelines(line)
                     outfile.close
     return 0
@@ -395,14 +395,15 @@ def generateMacrosNew(N,e):
                     cond2 = ('pct' in _cover)==1
                     print(_cover,_loc,cond1,cond2, cond1 or cond2)
                     if cond1 or cond2:
-                        for i in range(N/10+1):
+                        for i in range(int(N/10+1)):
                             dir = "macro%s/%s/%s/%s/%s/run%08d/"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                             testCreateDirectory(dir)
                             cnt+=1
                         for val in range(N):
-                            i = val/10
+                            i = int(val/10)
+                            print(_p," ",i," ",val)
                             dir = "%s/%s/%s/%s/%s/run%08d/"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
-                            outfile = open("macro%s/run_%08d.mac" %(dir,val),"wb")
+                            outfile = open("macro%s/run_%08d.mac" %(dir,val),"w+")
                             line = macroGeneratorNew(_cover,_loc,_element,_p,val,e,dir)
                             outfile.writelines(line)
                             outfile.close
@@ -436,7 +437,7 @@ def generateJobsNew(N,arguments):
                 for _element in d[_p]:
                     # print cnt,_p,element,_loc,cover
                     print(_p,_loc,_cover,_element)
-                    for i in range(N/10+1):
+                    for i in range(int(N/10+1)):
                         dir = "root_files%s/%s/%s/%s/%s/run%08d"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
                         if arguments['--force']:
                             print('Using force to recreate dir:',dir)
@@ -513,7 +514,7 @@ def generateJobsNew(N,arguments):
         sbonsai = "singularity exec --bind $PWD %s /src/rat-pac/tools/bonsai/bonsai"%(arguments["--simg"])
 
 
-    outfile_jobs = open('sub_job_%s'%(additionalMacStr),"wb")
+    outfile_jobs = open('sub_job_%s'%(additionalMacStr),"w+")
     outfile_jobs.writelines("#!/bin/sh\n")
     for _p in proc:
         for _loc in proc[_p]:
@@ -534,9 +535,9 @@ def generateJobsNew(N,arguments):
                         else:
                             outfile_jobs.writelines('msub %s\n'%(dir+'/job%08d.sh'%(0)))
                         log = "log%s/%s/%s/%s/%s/log"%(additionalMacStr,_cover,_loc,_element,_p)
-                        for i in range(N/10+1):
+                        for i in range(int(N/10+1)):
                             dir = "jobs%s/%s/%s/%s/%s"%(additionalMacStr,_cover,_loc,_element,_p)
-                            outfile = open(dir+'/job%08d.sh'%(i*10),"wb")
+                            outfile = open(dir+'/job%08d.sh'%(i*10),"w+")
                             #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXG)
                             #os.chmod(dir+'/job%08d.sh'%(i*10),S_IRWXU)
                             job_line = "%s_%s_%s_%s_%s_%s"%(additionalMacStr,_cover,_loc,_element,_p,i*10)
@@ -800,7 +801,7 @@ def mergeNtupleFilesNew(arguments):
                         trees[_tmp+'_RS'] = TChain("runSummary")
                         print(_tmp)
                         for _ii in range(N):# Covers up to 1000 jobs,
-                            i = _ii/10
+                            i = int(_ii/10)
                             dir = "%s/bonsai_root_files%s/%s/%s/%s/%s/run%08d/run_%08d.root"%(directory,additionalMacStr,_cover,_loc,_element,_p,i*10,_ii)
                             try:
                                 if os.path.exists(dir):
