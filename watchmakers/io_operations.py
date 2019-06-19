@@ -507,6 +507,7 @@ def generateJobsNew(N,arguments):
     rootDir     = os.environ['ROOTSYS']
     g4Dir       =  os.environ['G4INSTALL']
     watchmakersDir = os.environ['WATCHENV']
+    jobSub      = os.environ['JOBSUBMISSION']
     directory   = os.getcwd()
 
     if arguments["--singularity"]:
@@ -530,10 +531,7 @@ def generateJobsNew(N,arguments):
                             testCreateDirectory(dir)
                         else:
                             testCreateDirectoryIfNotExist(dir)
-                        if sheffield:
-                            outfile_jobs.writelines('condor_qsub %s\n'%(dir+'/job%08d.sh'%(0)))
-                        else:
-                            outfile_jobs.writelines('msub %s\n'%(dir+'/job%08d.sh'%(0)))
+                        outfile_jobs.writelines('%s %s\n'%(jobSub,dir+'/job%08d.sh'%(0)))
                         log = "log%s/%s/%s/%s/%s/log"%(additionalMacStr,_cover,_loc,_element,_p)
                         for i in range(int(N/10+1)):
                             dir = "jobs%s/%s/%s/%s/%s"%(additionalMacStr,_cover,_loc,_element,_p)
@@ -606,7 +604,7 @@ source %s/env_wm.sh\n\n"""%(job_line,log+'.out',log+'.err',directory,\
 (bonsai %s %s || bonsai %s %s ||bonsai %s %s ||bonsai %s %s || echo \"Could not run bonsai after 4 tries.\")>> %s\n\n'''%(mac,r_outfile,l_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,r_outfile,b_outfile,l_outfile)
                                     outfile.writelines(lines)
                             if i*10+10  < N:
-                                outfile.writelines("(msub %s || ./%s)"%(dir+'/job%08d.sh'%((i+1)*10),dir+'/job%08d.sh'%((i+1)*10)))
+                                outfile.writelines("(%s %s || ./%s)"%(jobSub,dir+'/job%08d.sh'%((i+1)*10),dir+'/job%08d.sh'%((i+1)*10)))
                             outfile.close()
 
 
