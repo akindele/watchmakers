@@ -1,4 +1,7 @@
 from .load import *
+from ROOT import TChain, gROOT, TFile
+
+
 
 # The purpose of this class is to handle the input/ouput operations of
 # WATCHMAKERS (WM). This include creating directories and files for the different
