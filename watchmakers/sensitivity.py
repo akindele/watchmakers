@@ -2,11 +2,19 @@
 
 from watchmakers.load import *
 from watchmakers.analysis import *
+
+from ROOT import kOrange as kO,kBlue as kB,kGreen as kG
+from ROOT import kMagenta as kM,kAzure as kA,kRed as kR
+from ROOT import TCanvas,TH2D, gStyle,TFile,gROOT
+#from .NeutrinoOscillation import nuOsc
+
+
 from .io_operations import testEnabledCondition
 if arguments['--noRoot']:
     print('Not loading the neutrinoOscillation module')
 else:
-    import watchmakers.NeutrinoOscillation as nuOsc
+    print('With root')    
+import watchmakers.NeutrinoOscillation as nuOsc
 
 from decimal import *
 setcontext(ExtendedContext)
@@ -147,17 +155,22 @@ def sensitivityMapPass2New():
     d,proc,coverage = loadSimulationParametersNew()
 
     minAchieve = 0
-
-    for _p in proc:
-        for _loc in proc[_p]:
-            for idx,_cover in enumerate(coverage):
+    
+    for idx,_cover in enumerate(coverage):
+        _str = "bonsai_root_files%s/%s/results.root"%(additionalMacStr,_cover)
+        outfile = TFile(_str,"RECREATE")
+        for _p in proc:
+            for _loc in proc[_p]:
                 for _element in d[_p]:
                     _tag = "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
                     _file = "bonsai_root_files%s/%s/merged_%s_%s_%s.root"%(additionalMacStr,_cover,_loc,_element,_p)
                     print(_tag)
-                    obtainEventEfficiency(_cover,_file,_tag)
+                    obtainEventEfficiency(_cover,_file,_tag,outfile)
 
                     print('')
+        print('Saving outfile:',_str)
+        outfile.Close()
+    return 0
 
 def EfficiencyMapInPMTVol():
     '''For the given configuration on initializing watchmakers,
@@ -193,20 +206,18 @@ def readEfficiencyHistogram():
     d,proc,coverage = loadSimulationParametersNew()
     additionalString,additionalCommands,additionalMacStr,additionalMacOpt = testEnabledCondition(arguments)
 
-    print('Loading in all .C file...')
-    for _p in proc:
-        for _loc in proc[_p]:
-            for idx,_cover in enumerate(coverage):
+    print('Reading in root tree')
+    for idx,_cover in enumerate(coverage):
+        _str = "bonsai_root_files%s/%s/results.root"%(additionalMacStr,_cover)
+        outfile = TFile(_str,"READ")
+        for _p in proc:
+            for _loc in proc[_p]:
                 for _element in d[_p]:
-                    _tag = "%s_%s_%s_%s"%(_cover,_loc,_element,_p)
-                    _hist = 'hist'+_tag
-                    _dir = "bonsai_root_files%s/%s/"%(additionalMacStr,_cover)
-                    _file =  _dir+'hist'+_tag+'.C'
-                    gROOT.ProcessLine('.x %s'%(_file))
-                    hist[_tag] =  TH2D()
-                    gROOT.GetObject(_hist,hist[_tag])
+                    _tag = "hist%s_%s_%s_%s"%(_cover,_loc,_element,_p)
+                    hist[_tag] =  outfile.Get(_tag)
+                    print(hist[_tag].GetEntries())
 
-    print('done processing all .C files. What is in the directory:')
+    print('done processing result file. What is in the directory:')
     gROOT.ProcessLine('.ls')
 
     print('\nLoading PMT activity:')

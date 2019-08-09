@@ -1,6 +1,7 @@
 from .load import *
 from .io_operations import testEnabledCondition
 from ROOT import gDirectory
+from ROOT import TFile,TH2D
 
 fidRadius = float(arguments['--tankRadius'])-float(arguments['--steelThick'])-float(arguments['--vetoThickR'])-float(arguments['--fidThick'])
 fidHeight = float(arguments['--halfHeight'])-float(arguments['--steelThick'])-float(arguments['--vetoThickZ'])-float(arguments['--fidThick'])
@@ -36,7 +37,7 @@ def logx_logy_array(nbins = 500,xmin = 1e-2,xmax = 30.,ymin = 1e-9,ymax = 1e3):
     return nbins,xbins,ybins
 
 
-def obtainEventEfficiency(cover,file,_tag,_distance2pmt=1,_n9=8,_dist=30.0,\
+def obtainEventEfficiency(cover,file,_tag,outfile,_distance2pmt=1,_n9=8,_dist=30.0,\
 _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
     # covPCT  = coveragePCT[cover]
     para = testEnabledCondition(arguments)
@@ -77,7 +78,10 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
     binwidthR = (rangeRmax-rangeRmin)/binR
     binN,rangeNmin,rangeNmax = 48,7.5,55.5
     binwidthN = (rangeNmax-rangeNmin)/binN
+    
+
     h = TH2D('hist%s'%(_tag),'Rate of events -  %s '%(_tag),binR,rangeRmin,rangeRmax,binN,rangeNmin,rangeNmax)
+    #    h.SetName(_tag)
     h.SetXTitle('distance from wall [m]')
     h.SetYTitle('n9 cut')
     h.SetZTitle('efficiency')
@@ -87,22 +91,14 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
     for _d in drange(rangeRmin+binwidthR/2.,rangeRmax,binwidthR):
         minAchieve = 0
 
-        print('\nD:',_d)
-        # h['hist%s'%(_tag)].Fill(_d,rangeNmin+binwidthN/2.0,eff)
         for _n9 in range(int(rangeNmin+binwidthN/2.0),int(rangeNmax)):
             cond = "closestPMT/1000.>%f"%(_d)
             cond += "&& good_pos>%f " %(_posGood)
             cond += "&& inner_hit > 4 &&  veto_hit < 4"
             cond += "&& n9 > %f" %(_n9)
-            #cond += "&& n9 > %f && nhit > %f && pe > %f" %(_n9,_nhit,_pe)
-            #cond += "&& pe/nhit < %f" %(_itr)
-            #cond += "&& sqrt(pow(x-mcx,2)+pow(y-mcy,2)+pow(z-mcz,2))/1000.<%f"%(_dist)
 
             if _someEntries !=0:
                 if minAchieve == 0:
-                    # _evts,eff,minR,tot = obtainEventEfficiency(_cov,_file,_distance2pmt=_d,_n9=_n)
-                    # print cond
-                    # print arbre["data"]
 
                     evts = arbre["data"].Draw("",cond,"goff")
                     eff = evts/totalEvents
@@ -116,9 +112,9 @@ _posGood=0.1,_dirGood=0.1,_pe=8,_nhit=8,_itr = 1.5):
             else:
                 h.Fill(_d,_n9,1./totalEvents)
                 eff =  1./totalEvents
-            print('(%2d,%4.2e),'%(_n9,eff), end=' ')
-
-    h.SaveAs("bonsai_root_files%s/%s/hist%s.C"%(additionalString,cover,_tag))
+    outfile.cd()
+    h.Write()
+    #    h.SaveAs("bonsai_root_files%s/%s/hist%s.C"%(additionalString,cover,_tag))
     arbre["rfile"].Close()
     del arbre
     return eff
