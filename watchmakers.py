@@ -10,81 +10,31 @@ from watchmakers.data import *
 
 if __name__ == "__main__":
 
-    print docstring
-    print arguments
+    print(docstring)
+    if arguments['-v']:
+    	print(arguments)
 #     print defaultValues
-    print ""
-
-    if arguments['-D']:
-        deleteAllWorkDirectories()
+    print("")
 
     if arguments['-m']:
-        if arguments['--newVers']:
-            generateMacrosNew(int(arguments['-N']),int(arguments['-e']))
-        else:
-            generateMacros(int(arguments['-N']),int(arguments['-e']))
+        generateMacrosNew(int(arguments['-N']),int(arguments['-e']))
 
     if arguments['-j']:
-        if arguments['--newVers']:
-            generateJobsNew(int(arguments['-N']),arguments)
-        else:
-            generateJobs(int(arguments['-N']),arguments)
-
-    if arguments['-n']:
-        extractNtuple(arguments)
-
-    if arguments['--extractNtup']:
-        extractNtupleALL(arguments)
+        generateJobsNew(int(arguments['-N']),arguments)
 
     if arguments['-M']:
-        if arguments['--newVers']:
-            mergeNtupleFilesNew(arguments)
-        else:
-            mergeNtupleFiles(arguments)
-
-    if arguments['-A']:
-        g,h = {},{}
-        g,h = runAnalysisProcess(arguments["-f"],g,h)
-        writeResultsToFile(arguments["-o"],g,h)
-
-    if  arguments["--efficiency"]:
-        extractHistogramWitCorrectRate()
-
-    if arguments['--sensitivity']:
-        sensitivityMapNew()
-
-    if arguments['--customJob']:
-        customJob(arguments)
-
-    if arguments['--pass1Trigger']:
-        performPass1(arguments)
-
-    if arguments['--pass2Trigger']:
-        performPass2(arguments)
-
-    if arguments['--fileDict']:
-        createFileDictionary(arguments)
-
-    if arguments['--PDFs']:
-        extractPDFandCorrectRate()
+        mergeNtupleFilesNew(arguments)
 
     if arguments['--histograms']:
-        if arguments['--newVers']:
-            sensitivityMapPass2New()
-        else:
-            sensitivityMapPass2()
+        sensitivityMapPass2New()
+
+    if arguments['--PMTAccHists']:
+        EfficiencyMapInPMTVol()
 
     if arguments['--evalRate']:
-        if arguments['--newVers']:
-            readEfficiencyHistogram()
-        else:
-            readEfficiencyHistogram()
+        readEfficiencyHistogram()
 
     if arguments['--findRate']:
-        if arguments['--newVers']:
-            findRate()
-        else:
-            findRate()
-
+        findRate()
 
 ######################## Waba Luba Dub Dub!! ###########################
